@@ -1,7 +1,8 @@
 const CACHE_NAME = "4rmoff-cache-v1";
+const APP_SHELL = "./index.html";
 const ASSETS = [
   "./",
-  "./index.html",
+  APP_SHELL,
   "./styles.css",
   "./app.js",
   "./manifest.json",
@@ -31,18 +32,29 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    (async () => {
+      const cached = await caches.match(event.request, { ignoreSearch: true });
       if (cached) {
         return cached;
       }
 
-      return fetch(event.request).then((response) => {
+      try {
+        const response = await fetch(event.request);
         if (event.request.method === "GET" && response.ok) {
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(event.request, responseClone);
         }
         return response;
-      });
-    })
+      } catch (error) {
+        if (event.request.mode === "navigate") {
+          const appShell = await caches.match(APP_SHELL, { ignoreSearch: true });
+          if (appShell) {
+            return appShell;
+          }
+        }
+        throw error;
+      }
+    })()
   );
 });
