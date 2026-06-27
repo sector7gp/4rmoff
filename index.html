@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
-    <meta name="description" content="4rmOff - Captura y gestion de contactos offline" />
+    <meta name="description" content="Captura y gestion de contactos offline" />
     <link rel="manifest" href="./manifest.json" />
     <link rel="stylesheet" href="./styles.css" />
     <title>4rmOff</title>
@@ -12,7 +12,7 @@
   <body>
     <header class="app-header">
       <div>
-        <h1>4rmOff</h1>
+        <h1>Registro de Visitantes</h1>
         <p class="subtitle">Captura de contactos offline</p>
       </div>
       <div class="header-actions">
@@ -39,51 +39,59 @@
       <section id="adminSection" class="hidden">
         <div class="card">
           <div class="section-title-row">
-            <h2>Listado de registros</h2>
+            <h2>Panel administrador</h2>
             <button id="adminLogoutBtn" class="danger-btn" type="button">Cerrar sesion admin</button>
           </div>
-          <div class="toolbar">
-            <input id="searchInput" type="search" placeholder="Buscar en todos los campos..." />
-            <span id="recordsCount" class="muted">0 registros</span>
+          <div id="adminMenu" class="admin-menu">
+            <button type="button" class="ghost-btn admin-menu-btn active" data-admin-view="records">Registros</button>
+            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="fields">Config. campos</button>
+            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="export">Exportacion</button>
+            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="pin">Cambio PIN</button>
           </div>
-          <div id="recordsTableContainer" class="table-wrapper"></div>
-        </div>
-
-        <div class="card">
-          <h2>Configuracion de campos</h2>
-          <form id="newFieldForm" class="inline-form">
-            <input id="newFieldName" type="text" maxlength="60" placeholder="Nombre del campo" required />
-            <select id="newFieldType">
-              <option value="texto">Texto</option>
-              <option value="numero">Numero</option>
-              <option value="email">Email</option>
-              <option value="telefono">Telefono</option>
-            </select>
-            <label class="checkbox-label">
-              <input id="newFieldRequired" type="checkbox" />
-              Obligatorio
-            </label>
-            <button type="submit" class="primary-btn">Agregar campo</button>
-          </form>
-          <div id="fieldsConfigList"></div>
-        </div>
-
-        <div class="card">
-          <h2>Exportacion CSV</h2>
-          <div class="toolbar">
-            <button id="exportAllBtn" class="primary-btn" type="button">Exportar todos</button>
-            <button id="exportFilteredBtn" class="ghost-btn" type="button">Exportar filtrados</button>
+          <div data-admin-panel="records">
+            <div class="toolbar">
+              <input id="searchInput" type="search" placeholder="Buscar en todos los campos..." />
+              <span id="recordsCount" class="muted">0 registros</span>
+            </div>
+            <div id="recordsTableContainer" class="table-wrapper"></div>
           </div>
-        </div>
 
-        <div class="card">
-          <h2>Cambiar PIN admin</h2>
-          <form id="changePinForm" class="inline-form">
-            <input id="currentPin" type="password" inputmode="numeric" maxlength="16" placeholder="PIN actual" required />
-            <input id="newPin" type="password" inputmode="numeric" maxlength="16" placeholder="Nuevo PIN" required />
-            <input id="confirmPin" type="password" inputmode="numeric" maxlength="16" placeholder="Confirmar PIN" required />
-            <button type="submit" class="primary-btn">Actualizar PIN</button>
-          </form>
+          <div data-admin-panel="fields" class="hidden">
+            <h3>Configuracion de campos</h3>
+            <form id="newFieldForm" class="inline-form">
+              <input id="newFieldName" type="text" maxlength="60" placeholder="Nombre del campo" required />
+              <select id="newFieldType">
+                <option value="texto">Texto</option>
+                <option value="numero">Numero</option>
+                <option value="email">Email</option>
+                <option value="telefono">Telefono</option>
+              </select>
+              <label class="checkbox-label">
+                <input id="newFieldRequired" type="checkbox" />
+                Obligatorio
+              </label>
+              <button type="submit" class="primary-btn">Agregar campo</button>
+            </form>
+            <div id="fieldsConfigList"></div>
+          </div>
+
+          <div data-admin-panel="export" class="hidden">
+            <h3>Exportacion CSV</h3>
+            <div class="toolbar">
+              <button id="exportAllBtn" class="primary-btn" type="button">Exportar todos</button>
+              <button id="exportFilteredBtn" class="ghost-btn" type="button">Exportar filtrados</button>
+            </div>
+          </div>
+
+          <div data-admin-panel="pin" class="hidden">
+            <h3>Cambiar PIN admin</h3>
+            <form id="changePinForm" class="inline-form">
+              <input id="currentPin" type="password" inputmode="numeric" maxlength="16" placeholder="PIN actual" required />
+              <input id="newPin" type="password" inputmode="numeric" maxlength="16" placeholder="Nuevo PIN" required />
+              <input id="confirmPin" type="password" inputmode="numeric" maxlength="16" placeholder="Confirmar PIN" required />
+              <button type="submit" class="primary-btn">Actualizar PIN</button>
+            </form>
+          </div>
         </div>
       </section>
     </main>

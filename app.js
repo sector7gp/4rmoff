@@ -26,7 +26,8 @@ const state = {
   filteredRecords: [],
   search: "",
   sort: { key: null, direction: "asc" },
-  editingRecordId: null
+  editingRecordId: null,
+  adminView: "records"
 };
 
 const refs = {
@@ -44,6 +45,7 @@ const refs = {
   pinError: document.querySelector("#pinError"),
   closePinDialogBtn: document.querySelector("#closePinDialogBtn"),
   adminLogoutBtn: document.querySelector("#adminLogoutBtn"),
+  adminMenu: document.querySelector("#adminMenu"),
   searchInput: document.querySelector("#searchInput"),
   recordsCount: document.querySelector("#recordsCount"),
   recordsTableContainer: document.querySelector("#recordsTableContainer"),
@@ -56,6 +58,18 @@ const refs = {
   exportFilteredBtn: document.querySelector("#exportFilteredBtn"),
   changePinForm: document.querySelector("#changePinForm")
 };
+
+function setAdminView(view) {
+  state.adminView = view;
+
+  document.querySelectorAll("[data-admin-view]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.adminView === view);
+  });
+
+  document.querySelectorAll("[data-admin-panel]").forEach((panel) => {
+    panel.classList.toggle("hidden", panel.dataset.adminPanel !== view);
+  });
+}
 
 function showToast(message) {
   refs.toast.textContent = message;
@@ -306,6 +320,7 @@ async function onAdminPinSubmit(event) {
   if (result.ok) {
     state.role = "admin";
     setRoleUi("admin");
+    setAdminView("records");
     refs.adminPinInput.value = "";
     refs.adminPinDialog.close();
     showToast("Modo administrador activado.");
@@ -476,8 +491,18 @@ function bindEvents() {
   refs.adminLogoutBtn.addEventListener("click", () => {
     state.role = "operator";
     setRoleUi("operator");
+    setAdminView("records");
     resetCaptureMode();
     showToast("Sesion admin finalizada.");
+  });
+
+  refs.adminMenu.addEventListener("click", (event) => {
+    const view = event.target.dataset.adminView;
+    if (!view) {
+      return;
+    }
+    if (!requireAdmin()) return;
+    setAdminView(view);
   });
 
   refs.searchInput.addEventListener("input", (event) => {
@@ -501,6 +526,7 @@ async function bootstrap() {
   await setConfig("version_esquema", 1);
   await reloadStateAndRender();
   setRoleUi("operator");
+  setAdminView("records");
   bindEvents();
   showToast(`App lista. PIN inicial de fabrica: ${getDefaultPinInfo()}`);
 }

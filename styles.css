@@ -58,6 +58,23 @@ p {
   gap: 0.5rem;
 }
 
+.admin-menu {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.admin-menu-btn {
+  min-width: 132px;
+}
+
+.admin-menu-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
 .badge {
   display: inline-block;
   padding: 0.25rem 0.6rem;
