@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="description" content="4rmOff - Captura y gestion de contactos offline" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>4rmOff</title>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <h1>4rmOff</h1>
+        <p class="subtitle">Captura de contactos offline</p>
+      </div>
+      <div class="header-actions">
+        <span id="roleBadge" class="badge badge-operator">Operador</span>
+        <button id="adminAccessBtn" class="ghost-btn discreet" type="button" aria-label="Acceso admin">•••</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card">
+        <div class="section-title-row">
+          <h2 id="captureTitle">Nuevo registro</h2>
+          <button id="clearFormBtn" class="ghost-btn" type="button">Limpiar</button>
+        </div>
+        <form id="captureForm" novalidate>
+          <div id="dynamicFields" class="dynamic-fields"></div>
+          <div class="form-actions">
+            <button id="submitFormBtn" type="submit" class="primary-btn">Guardar</button>
+            <button id="cancelEditBtn" class="ghost-btn hidden" type="button">Cancelar edicion</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="adminSection" class="hidden">
+        <div class="card">
+          <div class="section-title-row">
+            <h2>Listado de registros</h2>
+            <button id="adminLogoutBtn" class="danger-btn" type="button">Cerrar sesion admin</button>
+          </div>
+          <div class="toolbar">
+            <input id="searchInput" type="search" placeholder="Buscar en todos los campos..." />
+            <span id="recordsCount" class="muted">0 registros</span>
+          </div>
+          <div id="recordsTableContainer" class="table-wrapper"></div>
+        </div>
+
+        <div class="card">
+          <h2>Configuracion de campos</h2>
+          <form id="newFieldForm" class="inline-form">
+            <input id="newFieldName" type="text" maxlength="60" placeholder="Nombre del campo" required />
+            <select id="newFieldType">
+              <option value="texto">Texto</option>
+              <option value="numero">Numero</option>
+              <option value="email">Email</option>
+              <option value="telefono">Telefono</option>
+            </select>
+            <label class="checkbox-label">
+              <input id="newFieldRequired" type="checkbox" />
+              Obligatorio
+            </label>
+            <button type="submit" class="primary-btn">Agregar campo</button>
+          </form>
+          <div id="fieldsConfigList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Exportacion CSV</h2>
+          <div class="toolbar">
+            <button id="exportAllBtn" class="primary-btn" type="button">Exportar todos</button>
+            <button id="exportFilteredBtn" class="ghost-btn" type="button">Exportar filtrados</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Cambiar PIN admin</h2>
+          <form id="changePinForm" class="inline-form">
+            <input id="currentPin" type="password" inputmode="numeric" maxlength="16" placeholder="PIN actual" required />
+            <input id="newPin" type="password" inputmode="numeric" maxlength="16" placeholder="Nuevo PIN" required />
+            <input id="confirmPin" type="password" inputmode="numeric" maxlength="16" placeholder="Confirmar PIN" required />
+            <button type="submit" class="primary-btn">Actualizar PIN</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="adminPinDialog">
+      <form id="adminPinForm" method="dialog">
+        <h3>Modo administrador</h3>
+        <p class="muted">Ingresa PIN para desbloquear funciones administrativas.</p>
+        <input id="adminPinInput" type="password" inputmode="numeric" maxlength="16" placeholder="PIN admin" required />
+        <p id="pinError" class="error hidden"></p>
+        <menu>
+          <button value="cancel" class="ghost-btn" type="button" id="closePinDialogBtn">Cancelar</button>
+          <button value="default" class="primary-btn" type="submit">Ingresar</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
