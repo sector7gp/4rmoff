@@ -6,9 +6,16 @@ Aplicacion PWA offline para captura y gestion de contactos, orientada a uso inte
 
 - Funciona offline (despues de la primera carga) con `Service Worker`.
 - Almacenamiento local en `IndexedDB` (sin backend).
+- Formulario principal simplificado: usa placeholders en lugar de labels visibles.
+- Todos los campos son obligatorios en captura y edicion.
+- Campo default `DNI` (8 digitos) incluido en la configuracion inicial.
+- Chips rapidos de email (`Gmail`, `Outlook`, `Hotmail`, `Yahoo`) para completar dominios.
 - Dos perfiles:
   - `Operador`: carga de nuevos registros.
   - `Administrador`: listado, busqueda, edicion, eliminacion, exportacion CSV, configuracion de campos y cambio de PIN.
+- Panel admin con menu por secciones: `Registros`, `Exportacion`, `Campos`, `PIN`.
+- Header visual con logos laterales y footer de copyright.
+- UI escalada para tablet/desktop, manteniendo tamano base en celular.
 - Acceso admin por PIN local hasheado (`PBKDF2 + SHA-256`).
 - Bloqueo anti fuerza bruta: 5 intentos fallidos -> 5 minutos.
 - Exportacion CSV con formato compatible RFC 4180.
@@ -91,13 +98,14 @@ http://localhost:8080
 ### Operador
 
 - Completa el formulario dinamico.
+- Para email, puede escribir solo alias y tocar un chip de dominio.
 - Guarda registro.
 - El formulario se limpia automaticamente.
 
 ### Administrador
 
 - Accede por PIN.
-- Gestiona campos (agregar/editar/reordenar/eliminar y marcar obligatorios).
+- Gestiona campos (agregar/editar/reordenar/eliminar; siempre obligatorios).
 - Consulta listado, busca y ordena.
 - Edita o elimina registros.
 - Exporta CSV (todos o filtrados).
@@ -142,6 +150,8 @@ Usa la checklist:
   - recarga una vez online,
   - verifica registro del Service Worker,
   - limpia cache del sitio y vuelve a abrir.
+- Si `icons/*` da 404 en Apache:
+  - esta app usa carpeta `ico/` para evitar conflicto con alias `/icons/` en servidores con autoindex.
 - Si no aparece opcion de compartir CSV:
   - el navegador/dispositivo puede no soportar compartir archivos por Web Share API,
   - se usara descarga como fallback.

@@ -323,14 +323,14 @@ dialog menu {
   font-size: 0.9rem;
 }
 
-@media (min-width: 768px) and (max-width: 1280px) and (pointer: coarse) {
+@media (min-width: 768px) {
   body {
     font-size: 1.08rem;
   }
 
   input,
   select {
-    font-size: 1.08rem;
+    font-size: 2.5rem;
     padding: 0.8rem 0.85rem;
   }
 
@@ -343,6 +343,25 @@ dialog menu {
 
   .field-row label {
     font-size: 1rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  body {
+    font-size: 1.12rem;
+  }
+
+  input,
+  select {
+    font-size: 1.12rem;
+    padding: 0.88rem 0.92rem;
+  }
+
+  .primary-btn,
+  .ghost-btn,
+  .danger-btn {
+    font-size: 1.06rem;
+    padding: 0.76rem 0.96rem;
   }
 }
 

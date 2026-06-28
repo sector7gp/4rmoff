@@ -30,7 +30,12 @@ const state = {
   adminView: "records"
 };
 
-const EMAIL_DOMAIN_CHIPS = ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "yahoo.com.ar"];
+const EMAIL_DOMAIN_CHIPS = [
+  { label: "Gmail", domain: "gmail.com" },
+  { label: "Outlook", domain: "outlook.com" },
+  { label: "Hotmail", domain: "hotmail.com" },
+  { label: "Yahoo", domain: "yahoo.com" }
+];
 
 const refs = {
   captureForm: document.querySelector("#captureForm"),
@@ -130,10 +135,6 @@ function renderDynamicForm(prefillData = {}) {
     const row = document.createElement("div");
     row.className = "field-row";
 
-    const label = document.createElement("label");
-    label.setAttribute("for", `field-${field.id}`);
-    label.innerHTML = `${field.nombre}<span class="required-mark">*</span>`;
-
     const input = document.createElement("input");
     input.id = `field-${field.id}`;
     input.dataset.fieldId = field.id;
@@ -141,8 +142,10 @@ function renderDynamicForm(prefillData = {}) {
     input.type = fieldInputType(field.tipo);
     input.value = String(prefillData[field.id] ?? "");
     input.required = true;
+    input.placeholder = `${field.nombre} *`;
+    input.ariaLabel = field.nombre;
     if (field.tipo === "telefono") {
-      input.placeholder = "Solo digitos y guiones";
+      input.placeholder = `${field.nombre} * (solo digitos y guiones)`;
     }
     if (field.tipo === "dni") {
       input.inputMode = "numeric";
@@ -150,14 +153,14 @@ function renderDynamicForm(prefillData = {}) {
       input.pattern = "\\d{8}";
     }
 
-    row.append(label, input);
+    row.append(input);
 
     if (field.tipo === "email") {
       const chips = document.createElement("div");
       chips.className = "email-chips";
       chips.innerHTML = EMAIL_DOMAIN_CHIPS.map(
-        (domain) =>
-          `<button type="button" class="ghost-btn email-chip-btn" data-email-domain="${domain}" data-target-input="${input.id}">@${domain}</button>`
+        (chip) =>
+          `<button type="button" class="ghost-btn email-chip-btn" data-email-domain="${chip.domain}" data-target-input="${input.id}">${chip.label}</button>`
       ).join("");
       row.appendChild(chips);
     }
