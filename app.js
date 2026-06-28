@@ -30,6 +30,8 @@ const state = {
   adminView: "records"
 };
 
+const EMAIL_DOMAIN_CHIPS = ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "yahoo.com.ar"];
+
 const refs = {
   captureForm: document.querySelector("#captureForm"),
   dynamicFields: document.querySelector("#dynamicFields"),
@@ -53,7 +55,6 @@ const refs = {
   newFieldForm: document.querySelector("#newFieldForm"),
   newFieldName: document.querySelector("#newFieldName"),
   newFieldType: document.querySelector("#newFieldType"),
-  newFieldRequired: document.querySelector("#newFieldRequired"),
   exportAllBtn: document.querySelector("#exportAllBtn"),
   exportFilteredBtn: document.querySelector("#exportFilteredBtn"),
   changePinForm: document.querySelector("#changePinForm")
@@ -112,6 +113,16 @@ function fieldInputType(fieldType) {
   return "text";
 }
 
+function applyEmailDomain(input, domain) {
+  const current = input.value.trim();
+  if (!current) {
+    return;
+  }
+
+  const alias = current.includes("@") ? current.split("@")[0] : current;
+  input.value = `${alias}@${domain}`;
+}
+
 function renderDynamicForm(prefillData = {}) {
   refs.dynamicFields.innerHTML = "";
 
@@ -121,7 +132,7 @@ function renderDynamicForm(prefillData = {}) {
 
     const label = document.createElement("label");
     label.setAttribute("for", `field-${field.id}`);
-    label.innerHTML = `${field.nombre}${field.obligatorio ? '<span class="required-mark">*</span>' : ""}`;
+    label.innerHTML = `${field.nombre}<span class="required-mark">*</span>`;
 
     const input = document.createElement("input");
     input.id = `field-${field.id}`;
@@ -129,20 +140,28 @@ function renderDynamicForm(prefillData = {}) {
     input.dataset.fieldType = field.tipo;
     input.type = fieldInputType(field.tipo);
     input.value = String(prefillData[field.id] ?? "");
-    if (field.obligatorio) {
-      input.required = true;
-    }
+    input.required = true;
     if (field.tipo === "telefono") {
       input.placeholder = "Solo digitos y guiones";
     }
     if (field.tipo === "dni") {
-      input.placeholder = "8 digitos";
       input.inputMode = "numeric";
       input.maxLength = 8;
       input.pattern = "\\d{8}";
     }
 
     row.append(label, input);
+
+    if (field.tipo === "email") {
+      const chips = document.createElement("div");
+      chips.className = "email-chips";
+      chips.innerHTML = EMAIL_DOMAIN_CHIPS.map(
+        (domain) =>
+          `<button type="button" class="ghost-btn email-chip-btn" data-email-domain="${domain}" data-target-input="${input.id}">@${domain}</button>`
+      ).join("");
+      row.appendChild(chips);
+    }
+
     refs.dynamicFields.appendChild(row);
   });
 }
@@ -199,7 +218,7 @@ function validateByFieldType(field, value) {
 function validateRecordData(data) {
   for (const field of state.fields) {
     const value = String(data[field.id] ?? "").trim();
-    if (field.obligatorio && !value) {
+    if (!value) {
       return `El campo obligatorio ${field.nombre} no puede estar vacio.`;
     }
     const typeValidation = validateByFieldType(field, value);
@@ -273,10 +292,7 @@ function renderFieldConfig() {
           <option value="dni" ${field.tipo === "dni" ? "selected" : ""}>DNI</option>
           <option value="telefono" ${field.tipo === "telefono" ? "selected" : ""}>Telefono</option>
         </select>
-        <label class="checkbox-label">
-          <input type="checkbox" data-edit="obligatorio" ${field.obligatorio ? "checked" : ""} />
-          Obligatorio
-        </label>
+        <span class="muted required-note">Obligatorio</span>
         <div class="field-actions">
           <button class="ghost-btn" type="button" data-action="save-field">Guardar</button>
           <button class="ghost-btn" type="button" data-action="move-up">↑</button>
@@ -365,8 +381,7 @@ async function onFieldConfigClick(event) {
   if (action === "save-field") {
     const nombre = item.querySelector('[data-edit="nombre"]').value;
     const tipo = item.querySelector('[data-edit="tipo"]').value;
-    const obligatorio = item.querySelector('[data-edit="obligatorio"]').checked;
-    await updateField(fieldId, { nombre, tipo, obligatorio });
+    await updateField(fieldId, { nombre, tipo, obligatorio: true });
     showToast("Campo actualizado.");
   } else if (action === "move-up") {
     await moveField(fieldId, "up");
@@ -430,7 +445,7 @@ async function onCreateField(event) {
   await addField({
     nombre: refs.newFieldName.value,
     tipo: refs.newFieldType.value,
-    obligatorio: refs.newFieldRequired.checked
+    obligatorio: true
   });
 
   refs.newFieldForm.reset();
@@ -487,6 +502,17 @@ function registerServiceWorker() {
 
 function bindEvents() {
   refs.captureForm.addEventListener("submit", onSubmitCaptureForm);
+  refs.dynamicFields.addEventListener("click", (event) => {
+    const chip = event.target.closest("[data-email-domain]");
+    if (!chip) {
+      return;
+    }
+    const input = document.querySelector(`#${chip.dataset.targetInput}`);
+    if (!input) {
+      return;
+    }
+    applyEmailDomain(input, chip.dataset.emailDomain);
+  });
   refs.clearFormBtn.addEventListener("click", () => {
     refs.captureForm.reset();
     if (state.editingRecordId) {

@@ -5,8 +5,8 @@ const ALLOWED_TYPES = new Set(["texto", "numero", "email", "dni", "telefono"]);
 const DEFAULT_FIELDS = [
   { id: crypto.randomUUID(), nombre: "Nombre", tipo: "texto", obligatorio: true, orden: 0 },
   { id: crypto.randomUUID(), nombre: "Apellido", tipo: "texto", obligatorio: true, orden: 1 },
-  { id: crypto.randomUUID(), nombre: "DNI", tipo: "dni", obligatorio: false, orden: 2 },
-  { id: crypto.randomUUID(), nombre: "Email", tipo: "email", obligatorio: false, orden: 3 }
+  { id: crypto.randomUUID(), nombre: "DNI", tipo: "dni", obligatorio: true, orden: 2 },
+  { id: crypto.randomUUID(), nombre: "Email", tipo: "email", obligatorio: true, orden: 3 }
 ];
 
 function normalizeOrder(fields) {
@@ -43,7 +43,7 @@ export async function addField({ nombre, tipo, obligatorio }) {
     id: crypto.randomUUID(),
     nombre: nombre.trim(),
     tipo,
-    obligatorio: Boolean(obligatorio),
+    obligatorio: true,
     orden: fields.length
   };
   validateFieldInput(field);
@@ -61,7 +61,8 @@ export async function updateField(fieldId, patch) {
   const updated = {
     ...existing,
     ...patch,
-    nombre: patch.nombre !== undefined ? patch.nombre.trim() : existing.nombre
+    nombre: patch.nombre !== undefined ? patch.nombre.trim() : existing.nombre,
+    obligatorio: true
   };
   validateFieldInput(updated);
   await put("fields", updated);
