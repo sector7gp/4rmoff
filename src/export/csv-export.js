@@ -27,22 +27,30 @@ export function buildExportFilename() {
 }
 
 export async function shareOrDownloadCsv(fileName, csvContent) {
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["\uFEFF", csvContent], { type: "text/csv;charset=utf-8;" });
   const file = new File([blob], fileName, { type: "text/csv" });
+  const isAndroid = /Android/i.test(navigator.userAgent);
 
-  if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-    await navigator.share({
-      title: "Exportacion de contactos",
-      files: [file]
-    });
-    return "shared";
+  if (isAndroid && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        title: "Exportacion de contactos",
+        files: [file]
+      });
+      return "shared";
+    } catch {
+      // If native share fails/cancels, continue with direct download fallback.
+    }
   }
 
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = fileName;
+  anchor.style.display = "none";
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(url);
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   return "downloaded";
 }
