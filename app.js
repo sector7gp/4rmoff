@@ -1,5 +1,5 @@
 import { setConfig } from "./src/db/indexeddb.js";
-import { ensurePinInitialized, getDefaultPinInfo, updatePin, verifyPin } from "./src/auth/pin-auth.js";
+import { ensurePinInitialized, updatePin, verifyPin } from "./src/auth/pin-auth.js";
 import {
   addField,
   deleteField,
@@ -544,7 +544,6 @@ async function bootstrap() {
   setRoleUi("operator");
   setAdminView("records");
   bindEvents();
-  showToast(`App lista. PIN inicial de fabrica: ${getDefaultPinInfo()}`);
 }
 
 bootstrap().catch((error) => {

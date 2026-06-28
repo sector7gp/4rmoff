@@ -1,4 +1,4 @@
-const CACHE_NAME = "4rmoff-cache-v3";
+const CACHE_NAME = "4rmoff-cache-v4";
 const APP_SHELL = "./index.html";
 const ASSETS = [
   "./",
@@ -18,7 +18,20 @@ const ASSETS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      await Promise.all(
+        ASSETS.map(async (asset) => {
+          try {
+            await cache.add(asset);
+          } catch (error) {
+            // Keep SW install resilient even if one static file is missing in production.
+            console.warn("[SW] Asset not cached:", asset, error);
+          }
+        })
+      );
+      await self.skipWaiting();
+    })()
   );
 });
 
