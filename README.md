@@ -34,7 +34,7 @@ Mas detalle en `docs/adr/0001-frontend-stack.md`.
   app.js
   manifest.json
   sw.js
-  icons/
+  ico/
   src/
     db/indexeddb.js
     auth/pin-auth.js
