@@ -22,14 +22,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 0.75rem;
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 
 .brand-logo {
-  max-height: 72px;
-  width: auto;
+  height: 60px;
+  width: 100px;
   object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .app-header {
