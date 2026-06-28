@@ -496,14 +496,16 @@ function bindEvents() {
     showToast("Sesion admin finalizada.");
   });
 
-  refs.adminMenu.addEventListener("click", (event) => {
-    const view = event.target.dataset.adminView;
-    if (!view) {
-      return;
-    }
-    if (!requireAdmin()) return;
-    setAdminView(view);
-  });
+  if (refs.adminMenu) {
+    refs.adminMenu.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-admin-view]");
+      if (!button) {
+        return;
+      }
+      if (!requireAdmin()) return;
+      setAdminView(button.dataset.adminView);
+    });
+  }
 
   refs.searchInput.addEventListener("input", (event) => {
     if (!requireAdmin()) return;
