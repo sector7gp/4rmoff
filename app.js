@@ -106,6 +106,7 @@ function requireAdmin() {
 
 function fieldInputType(fieldType) {
   if (fieldType === "numero") return "number";
+  if (fieldType === "dni") return "text";
   if (fieldType === "email") return "email";
   if (fieldType === "telefono") return "tel";
   return "text";
@@ -133,6 +134,12 @@ function renderDynamicForm(prefillData = {}) {
     }
     if (field.tipo === "telefono") {
       input.placeholder = "Solo digitos y guiones";
+    }
+    if (field.tipo === "dni") {
+      input.placeholder = "8 digitos";
+      input.inputMode = "numeric";
+      input.maxLength = 8;
+      input.pattern = "\\d{8}";
     }
 
     row.append(label, input);
@@ -178,6 +185,12 @@ function validateByFieldType(field, value) {
     const phoneRegex = /^[0-9-]+$/;
     if (!phoneRegex.test(value)) {
       return `El campo ${field.nombre} solo acepta digitos y guiones.`;
+    }
+  }
+  if (field.tipo === "dni") {
+    const dniRegex = /^\d{8}$/;
+    if (!dniRegex.test(value)) {
+      return `El campo ${field.nombre} debe tener 8 digitos numericos.`;
     }
   }
   return null;
@@ -257,6 +270,7 @@ function renderFieldConfig() {
           <option value="texto" ${field.tipo === "texto" ? "selected" : ""}>Texto</option>
           <option value="numero" ${field.tipo === "numero" ? "selected" : ""}>Numero</option>
           <option value="email" ${field.tipo === "email" ? "selected" : ""}>Email</option>
+          <option value="dni" ${field.tipo === "dni" ? "selected" : ""}>DNI</option>
           <option value="telefono" ${field.tipo === "telefono" ? "selected" : ""}>Telefono</option>
         </select>
         <label class="checkbox-label">

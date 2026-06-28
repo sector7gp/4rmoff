@@ -14,6 +14,24 @@ body {
   color: #111827;
 }
 
+.brand-header {
+  height: 100px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+.brand-logo {
+  max-height: 72px;
+  width: auto;
+  object-fit: contain;
+}
+
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -281,6 +299,13 @@ dialog menu {
   display: none !important;
 }
 
+.app-footer {
+  margin-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background: #030712;
@@ -290,6 +315,11 @@ dialog menu {
   .card {
     background: #111827;
     border-color: #1f2937;
+  }
+
+  .brand-header {
+    background: #ffffff;
+    border-color: #e5e7eb;
   }
 
   input,

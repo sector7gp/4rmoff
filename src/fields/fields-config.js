@@ -1,11 +1,11 @@
 import { batchPut, getAll, put, remove } from "../db/indexeddb.js";
 
-const ALLOWED_TYPES = new Set(["texto", "numero", "email", "telefono"]);
+const ALLOWED_TYPES = new Set(["texto", "numero", "email", "dni", "telefono"]);
 
 const DEFAULT_FIELDS = [
   { id: crypto.randomUUID(), nombre: "Nombre", tipo: "texto", obligatorio: true, orden: 0 },
   { id: crypto.randomUUID(), nombre: "Apellido", tipo: "texto", obligatorio: true, orden: 1 },
-  { id: crypto.randomUUID(), nombre: "Telefono", tipo: "telefono", obligatorio: false, orden: 2 },
+  { id: crypto.randomUUID(), nombre: "DNI", tipo: "dni", obligatorio: false, orden: 2 },
   { id: crypto.randomUUID(), nombre: "Email", tipo: "email", obligatorio: false, orden: 3 }
 ];
 

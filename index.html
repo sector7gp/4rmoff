@@ -10,6 +10,11 @@
     <title>4rmOff</title>
   </head>
   <body>
+    <header class="brand-header">
+      <img src="./img/toystory5.png" alt="Toy Story 5" class="brand-logo brand-logo-left" />
+      <img src="./img/portalrosario.png" alt="Portal Rosario" class="brand-logo brand-logo-right" />
+    </header>
+
     <header class="app-header">
       <div>
         <h1>Registro de Visitantes</h1>
@@ -44,9 +49,9 @@
           </div>
           <div id="adminMenu" class="admin-menu">
             <button type="button" class="ghost-btn admin-menu-btn active" data-admin-view="records">Registros</button>
-            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="fields">Config. campos</button>
             <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="export">Exportacion</button>
-            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="pin">Cambio PIN</button>
+            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="fields">Campos</button>
+            <button type="button" class="ghost-btn admin-menu-btn" data-admin-view="pin">PIN</button>
           </div>
           <div data-admin-panel="records">
             <div class="toolbar">
@@ -64,6 +69,7 @@
                 <option value="texto">Texto</option>
                 <option value="numero">Numero</option>
                 <option value="email">Email</option>
+                <option value="dni">DNI</option>
                 <option value="telefono">Telefono</option>
               </select>
               <label class="checkbox-label">
@@ -95,6 +101,8 @@
         </div>
       </section>
     </main>
+
+    <footer class="app-footer">Copyright 2026</footer>
 
     <dialog id="adminPinDialog">
       <form id="adminPinForm" method="dialog">
